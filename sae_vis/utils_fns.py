@@ -169,7 +169,8 @@ def random_range_indices(
 def get_decode_html_safe_fn(
     tokenizer: PreTrainedTokenizerBase, html: bool = False
 ) -> Callable[[int | list[int]], str | list[str]]:
-    vocab_dict = {v: k for k, v in tokenizer.vocab.items()}  # type: ignore
+    vocab_dict = {v: k for k, v in tokenizer.get_vocab().items()}
+    # vocab_dict = {v: k for k, v in tokenizer.vocab.items()}  # type: ignore
 
     def decode(token_id: int | list[int]) -> str | list[str]:
         """
