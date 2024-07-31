@@ -1099,7 +1099,7 @@ class SaeVisData:
             feature_idx: int | None = None,
             is_single: bool =False
     ) -> None:
-        if is_single==False:
+        if is_single==True:
             return self._save_feature_centric_vis(filename,feature_idx)
         """
         Returns the HTML string for the view which lets you navigate between different features.
