@@ -47,7 +47,7 @@ METRIC_TITLES = {
     "loss_effect": "Loss Effect",
 }
 PRECISION = 4
-
+from typing import Optional
 
 @dataclass_json
 @dataclass
