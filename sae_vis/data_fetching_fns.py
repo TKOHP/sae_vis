@@ -299,6 +299,8 @@ def parse_feature_data(
     # ! Get all data for the middle column visualisations, i.e. the two histograms & the logit table
 
     # Get the logits of all features (i.e. the directions this feature writes to the logit output)
+    feature_resid_dir = feature_resid_dir.to("cuda:0")
+    W_U = W_U.to("cuda:0")
     logits = einops.einsum(
         feature_resid_dir, W_U, "feats d_model, d_model d_vocab -> feats d_vocab"
     )
@@ -800,6 +802,8 @@ def get_sequences_data(
     )  # shape [batch buf d_model]
 
     # Do the ablations, and get difference in logprobs
+    resid_post_pre_ablation = resid_post_pre_ablation.to("cuda:0")
+    resid_post_feature_effect = resid_post_feature_effect.to("cuda:0")
     new_resid_post = resid_post_pre_ablation - resid_post_feature_effect
     new_logits = (new_resid_post / new_resid_post.std(dim=-1, keepdim=True)) @ W_U
     orig_logits = (

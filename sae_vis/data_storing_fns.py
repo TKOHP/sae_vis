@@ -1051,62 +1051,103 @@ class SaeVisData:
 
         return sae_vis_data
 
+    # 一个特征一个html
     def save_feature_centric_vis(
-        self,
-        filename: str | Path,
-        feature_idx: int | None = None,
+            self,
+            filename: str | Path,
+            feature_idx: Optional[int] = None,
     ) -> None:
-        """
+        '''
         Returns the HTML string for the view which lets you navigate between different features.
 
         Args:
             model:          Used to get the tokenizer (for converting token IDs to string tokens).
             filename:       The HTML filepath we'll save the visualization to.
             feature_idx:    This is the default feature index we'll start on. If None, we use the first feature.
-        """
-        # Initialize the object we'll eventually get_html from
-        HTML_OBJ = HTML()
+        '''
 
-        # Set the default argument for the dropdown (i.e. when the page first loads)
-        assert (
-            feature_idx is None or feature_idx in self.feature_data_dict
-        ), "Specified feature_idx not in specified features"
-        first_feature = (
-            next(iter(self.feature_data_dict)) if (feature_idx is None) else feature_idx
-        )
-
-        # Get tokenize function (we only need to define it once)
         assert self.model is not None
-        assert self.model.tokenizer is not None
         decode_fn = get_decode_html_safe_fn(self.model.tokenizer)
 
         # Create iterator
         iterator = list(self.feature_data_dict.items())
-        if self.cfg.verbose:
-            iterator = tqdm(iterator, desc="Saving feature-centric vis")
-
-        # For each FeatureData object, we get the html_obj for its feature-centric vis, and merge it with HTML_OBJ
-        # (we arbitarily set the HTML string to be the HTML string for the first feature's view; they're all the same)
+        if self.cfg.verbose: iterator = tqdm(iterator, desc="Saving feature-centric vis")
         for feature, feature_data in iterator:
-            html_obj = feature_data._get_html_data_feature_centric(
-                self.cfg.feature_centric_layout, decode_fn
-            )
+            HTML_OBJ = HTML()
+            html_obj = feature_data._get_html_data_feature_centric(self.cfg.feature_centric_layout, decode_fn)
             HTML_OBJ.js_data[str(feature)] = deepcopy(html_obj.js_data)
-            if feature == first_feature:
-                HTML_OBJ.html_data = deepcopy(html_obj.html_data)
 
-        # Add the aggdata
-        HTML_OBJ.js_data = {
-            "AGGDATA": self.feature_stats.aggdata,
-            "DASHBOARD_DATA": HTML_OBJ.js_data,
-        }
+            HTML_OBJ.html_data = deepcopy(html_obj.html_data)
 
-        # Save our full HTML
-        HTML_OBJ.get_html(
-            layout=self.cfg.feature_centric_layout,
-            filename=filename,
-            first_key=str(first_feature),
-        )
+            # Add the aggdata
+            HTML_OBJ.js_data = {
+                "AGGDATA": self.feature_stats.aggdata,
+                "DASHBOARD_DATA": HTML_OBJ.js_data,
+            }
+
+            # Save our full HTML
+            HTML_OBJ.get_html(
+                layout=self.cfg.feature_centric_layout,
+                filename=f"{filename}/{feature}.html",
+                first_key=str(feature),
+            )
+
+    # def save_feature_centric_vis(
+    #     self,
+    #     filename: str | Path,
+    #     feature_idx: int | None = None,
+    # ) -> None:
+    #     """
+    #     Returns the HTML string for the view which lets you navigate between different features.
+    #
+    #     Args:
+    #         model:          Used to get the tokenizer (for converting token IDs to string tokens).
+    #         filename:       The HTML filepath we'll save the visualization to.
+    #         feature_idx:    This is the default feature index we'll start on. If None, we use the first feature.
+    #     """
+    #     # Initialize the object we'll eventually get_html from
+    #     HTML_OBJ = HTML()
+    #
+    #     # Set the default argument for the dropdown (i.e. when the page first loads)
+    #     assert (
+    #         feature_idx is None or feature_idx in self.feature_data_dict
+    #     ), "Specified feature_idx not in specified features"
+    #     first_feature = (
+    #         next(iter(self.feature_data_dict)) if (feature_idx is None) else feature_idx
+    #     )
+    #
+    #     # Get tokenize function (we only need to define it once)
+    #     assert self.model is not None
+    #     assert self.model.tokenizer is not None
+    #     decode_fn = get_decode_html_safe_fn(self.model.tokenizer)
+    #
+    #     # Create iterator
+    #     iterator = list(self.feature_data_dict.items())
+    #     if self.cfg.verbose:
+    #         iterator = tqdm(iterator, desc="Saving feature-centric vis")
+    #
+    #     # For each FeatureData object, we get the html_obj for its feature-centric vis, and merge it with HTML_OBJ
+    #     # (we arbitarily set the HTML string to be the HTML string for the first feature's view; they're all the same)
+    #     for feature, feature_data in iterator:
+    #         html_obj = feature_data._get_html_data_feature_centric(
+    #             self.cfg.feature_centric_layout, decode_fn
+    #         )
+    #         HTML_OBJ.js_data[str(feature)] = deepcopy(html_obj.js_data)
+    #         if feature == first_feature:
+    #             HTML_OBJ.html_data = deepcopy(html_obj.html_data)
+    #
+    #     # Add the aggdata
+    #     HTML_OBJ.js_data = {
+    #         "AGGDATA": self.feature_stats.aggdata,
+    #         "DASHBOARD_DATA": HTML_OBJ.js_data,
+    #     }
+    #
+    #     # Save our full HTML
+    #     HTML_OBJ.get_html(
+    #         layout=self.cfg.feature_centric_layout,
+    #         filename=filename,
+    #         first_key=str(first_feature),
+    #     )
 
     def save_prompt_centric_vis(
         self,
