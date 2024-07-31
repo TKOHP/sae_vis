@@ -49,6 +49,7 @@ METRIC_TITLES = {
 PRECISION = 4
 from typing import Optional
 
+
 @dataclass_json
 @dataclass
 class FeatureTablesData:
@@ -91,12 +92,12 @@ class FeatureTablesData:
     correlated_b_features_cossim: list[float] = field(default_factory=list)
 
     def _get_html_data(
-        self,
-        cfg: FeatureTablesConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
+            self,
+            cfg: FeatureTablesConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
     ) -> HTML:
         """
         Returns the HTML for the left-hand tables, wrapped in a 'grid-column' div.
@@ -106,7 +107,7 @@ class FeatureTablesData:
         """
         # Read HTML from file, and replace placeholders with real ID values
         html_str = (
-            Path(__file__).parent / "html" / "feature_tables_template.html"
+                Path(__file__).parent / "html" / "feature_tables_template.html"
         ).read_text()
         html_str = html_str.replace("FEATURE_TABLES_ID", f"feature-tables-{id_suffix}")
 
@@ -127,8 +128,8 @@ class FeatureTablesData:
 
         # Store the other 3, if they exist (they're all in the same format, so we can do it in a for loop)
         for name, js_name in zip(
-            ["correlated_neurons", "correlated_features", "correlated_b_features"],
-            ["correlatedNeurons", "correlatedFeatures", "correlatedFeaturesB"],
+                ["correlated_neurons", "correlated_features", "correlated_b_features"],
+                ["correlatedNeurons", "correlatedFeatures", "correlatedFeaturesB"],
         ):
             if len(getattr(self, f"{name}_indices")) > 0:
                 # assert len(getattr(self, f"{name}_indices")) >= cfg.n_rows, "Not enough rows!"
@@ -151,12 +152,12 @@ class FeatureTablesData:
 @dataclass
 class ActsHistogramData(HistogramData):
     def _get_html_data(
-        self,
-        cfg: ActsHistogramConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
+            self,
+            cfg: ActsHistogramConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
     ) -> HTML:
         """
         Converts data -> HTML object, for the feature activations histogram (i.e. the histogram over all sampled tokens,
@@ -168,7 +169,7 @@ class ActsHistogramData(HistogramData):
 
         # Read HTML from file, and replace placeholders with real ID values
         html_str = (
-            Path(__file__).parent / "html" / "acts_histogram_template.html"
+                Path(__file__).parent / "html" / "acts_histogram_template.html"
         ).read_text()
         html_str = html_str.replace("HISTOGRAM_ACTS_ID", f"histogram-acts-{id_suffix}")
 
@@ -199,12 +200,12 @@ class ActsHistogramData(HistogramData):
 @dataclass
 class LogitsHistogramData(HistogramData):
     def _get_html_data(
-        self,
-        cfg: LogitsHistogramConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
+            self,
+            cfg: LogitsHistogramConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
     ) -> HTML:
         """
         Converts data -> HTML object, for the logits histogram (i.e. the histogram over all tokens in the vocab, showing
@@ -216,7 +217,7 @@ class LogitsHistogramData(HistogramData):
 
         # Read HTML from file, and replace placeholders with real ID values
         html_str = (
-            Path(__file__).parent / "html" / "logits_histogram_template.html"
+                Path(__file__).parent / "html" / "logits_histogram_template.html"
         ).read_text()
         html_str = html_str.replace(
             "HISTOGRAM_LOGITS_ID", f"histogram-logits-{id_suffix}"
@@ -245,12 +246,12 @@ class LogitsTableData:
     top_logits: list[float] = field(default_factory=list)
 
     def _get_html_data(
-        self,
-        cfg: LogitsTableConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
+            self,
+            cfg: LogitsTableConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
     ) -> HTML:
         """
         Converts data -> HTML object, for the logits table (i.e. the top and bottom affected tokens by this feature).
@@ -275,7 +276,7 @@ class LogitsTableData:
 
         # Read HTML from file, and replace placeholders with real ID values
         html_str = (
-            Path(__file__).parent / "html" / "logits_table_template.html"
+                Path(__file__).parent / "html" / "logits_table_template.html"
         ).read_text()
         html_str = html_str.replace("LOGITS_TABLE_ID", f"logits-table-{id_suffix}")
 
@@ -291,14 +292,14 @@ class LogitsTableData:
                 {
                     "symbol": unprocess_str_tok(neg_str[i]),
                     "value": round(bottom_logits[i], 2),
-                    "color": f"rgba(255,{int(255*(1-neg_bg_values[i]))},{int(255*(1-neg_bg_values[i]))},0.5)",
+                    "color": f"rgba(255,{int(255 * (1 - neg_bg_values[i]))},{int(255 * (1 - neg_bg_values[i]))},0.5)",
                 }
             )
             data["posLogits"].append(
                 {
                     "symbol": unprocess_str_tok(pos_str[i]),
                     "value": round(top_logits[i], 2),
-                    "color": f"rgba({int(255*(1-pos_bg_values[i]))},{int(255*(1-pos_bg_values[i]))},255,0.5)",
+                    "color": f"rgba({int(255 * (1 - pos_bg_values[i]))},{int(255 * (1 - pos_bg_values[i]))},255,0.5)",
                 }
             )
 
@@ -353,7 +354,7 @@ class SequenceData:
         )
 
     def _filter(
-        self, float_list: list[list[float]], int_list: list[list[int]]
+            self, float_list: list[list[float]], int_list: list[list[int]]
     ) -> tuple[list[list[float]], list[list[int]]]:
         """
         Filters the list of floats and ints, by removing any elements which are zero. Note - the absolute values of the
@@ -369,12 +370,12 @@ class SequenceData:
         return float_list, int_list
 
     def _get_html_data(
-        self,
-        cfg: PromptConfig | SequencesConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
+            self,
+            cfg: PromptConfig | SequencesConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
     ) -> HTML:
         """
         Args:
@@ -452,22 +453,22 @@ class SequenceData:
         # than the token list by 1, so we need to pad it at the first token
         if isinstance(cfg, PromptConfig):
             assert (
-                len(pos_ids)
-                == len(neg_ids)
-                == len(pos_val)
-                == len(neg_val)
-                == len(self.token_ids) - 1
+                    len(pos_ids)
+                    == len(neg_ids)
+                    == len(pos_val)
+                    == len(neg_val)
+                    == len(self.token_ids) - 1
             ), "If this is a single prompt, these lists must be the same length as token_ids or 1 less"
             pos_ids = [[]] + pos_ids
             neg_ids = [[]] + neg_ids
             pos_val = [[]] + pos_val
             neg_val = [[]] + neg_val
         assert (
-            len(pos_ids)
-            == len(neg_ids)
-            == len(pos_val)
-            == len(neg_val)
-            == len(self.token_ids)
+                len(pos_ids)
+                == len(neg_ids)
+                == len(pos_val)
+                == len(neg_val)
+                == len(self.token_ids)
         ), "If this is part of a sequence group etc are given, they must be the same length as token_ids"
 
         # Process the tokens to get str toks
@@ -491,16 +492,16 @@ class SequenceData:
             # Get args if this is the bolded token (we make it bold, and maybe add permanent line to histograms)
             if bold_idx is not None:
                 kwargs_bold["isBold"] = (bold_idx == i) or (
-                    bold_idx == "max" and i == np.argmax(feat_acts).item()
+                        bold_idx == "max" and i == np.argmax(feat_acts).item()
                 )
                 if kwargs_bold["isBold"] and permanent_line:
                     kwargs_bold["permanentLine"] = True
 
             # If we only have data for the bold token, we hide all other tokens' hoverdata (and skip other kwargs)
             if (
-                only_bold
-                and isinstance(bold_idx, int)
-                and (i not in {bold_idx, bold_idx + 1})
+                    only_bold
+                    and isinstance(bold_idx, int)
+                    and (i not in {bold_idx, bold_idx + 1})
             ):
                 kwargs_hide["hide"] = True
 
@@ -557,7 +558,7 @@ class SequenceData:
         if first_in_group:
             # Read HTML from file, replace placeholders with real ID values
             html_str = (
-                Path(__file__).parent / "html" / "sequences_group_template.html"
+                    Path(__file__).parent / "html" / "sequences_group_template.html"
             ).read_text()
             html_str = html_str.replace("SEQUENCE_GROUP_ID", seq_group_id)
 
@@ -606,14 +607,14 @@ class SequenceGroupData:
         )
 
     def _get_html_data(
-        self,
-        cfg: SequencesConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
-        # These default values should be correct when we only have one sequence group, because when we call this from
-        # a SequenceMultiGroupData we'll override them)
+            self,
+            cfg: SequencesConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
+            # These default values should be correct when we only have one sequence group, because when we call this from
+            # a SequenceMultiGroupData we'll override them)
     ) -> HTML:
         """
         This creates a single group of sequences, i.e. title plus some number of vertically stacked sequences.
@@ -694,12 +695,12 @@ class SequenceMultiGroupData:
         )
 
     def _get_html_data(
-        self,
-        cfg: SequencesConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        id_suffix: str,
-        column: int | tuple[int, int],
-        component_specific_kwargs: dict[str, Any] = {},
+            self,
+            cfg: SequencesConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            id_suffix: str,
+            column: int | tuple[int, int],
+            component_specific_kwargs: dict[str, Any] = {},
     ) -> HTML:
         """
         Args:
@@ -747,7 +748,7 @@ class SequenceMultiGroupData:
         # Create the HTML object, and add all the sequence groups to it, possibly across different columns
         html_obj = HTML()
         for i, (col, group_size, sequences_group) in enumerate(
-            zip(cols, cfg.group_sizes, self.seq_group_data)
+                zip(cols, cfg.group_sizes, self.seq_group_data)
         ):
             html_obj += sequences_group._get_html_data(
                 cfg=cfg,
@@ -766,12 +767,12 @@ class SequenceMultiGroupData:
 
 
 GenericData = (
-    FeatureTablesData
-    | ActsHistogramData
-    | LogitsTableData
-    | LogitsHistogramData
-    | SequenceMultiGroupData
-    | SequenceData
+        FeatureTablesData
+        | ActsHistogramData
+        | LogitsTableData
+        | LogitsHistogramData
+        | SequenceMultiGroupData
+        | SequenceData
 )
 
 
@@ -828,14 +829,14 @@ class FeatureData:
         }
         config_class_name = config.__class__.__name__
         assert (
-            config_class_name in CONFIG_CLASS_MAP
+                config_class_name in CONFIG_CLASS_MAP
         ), f"Invalid component config: {config_class_name}"
         return CONFIG_CLASS_MAP[config_class_name]
 
     def _get_html_data_feature_centric(
-        self,
-        layout: SaeVisLayoutConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
+            self,
+            layout: SaeVisLayoutConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
     ) -> HTML:
         """
         Returns the HTML object for a single feature-centric view. These are assembled together into the full feature-
@@ -870,12 +871,12 @@ class FeatureData:
         return html_obj
 
     def _get_html_data_prompt_centric(
-        self,
-        layout: SaeVisLayoutConfig,
-        decode_fn: Callable[[int | list[int]], str | list[str]],
-        column_idx: int,
-        bold_idx: int | Literal["max"],
-        title: str,
+            self,
+            layout: SaeVisLayoutConfig,
+            decode_fn: Callable[[int | list[int]], str | list[str]],
+            column_idx: int,
+            bold_idx: int | Literal["max"],
+            title: str,
     ) -> HTML:
         """
         Returns the HTML object for a single column of the prompt-centric view. These are assembled together into a full
@@ -902,15 +903,15 @@ class FeatureData:
 
         # Verify that we only have a single column
         assert (
-            layout.columns.keys() == {0}
+                layout.columns.keys() == {0}
         ), f"prompt_centric_layout should only have 1 column, instead found cols {layout.columns.keys()}"
         assert (
-            layout.prompt_cfg is not None
+                layout.prompt_cfg is not None
         ), "prompt_centric_cfg should include a PromptConfig, but found None"
         if layout.seq_cfg is not None:
             assert (
-                (layout.seq_cfg.n_quantiles == 0)
-                or (layout.seq_cfg.stack_mode == "stack-all")
+                    (layout.seq_cfg.n_quantiles == 0)
+                    or (layout.seq_cfg.stack_mode == "stack-all")
             ), "prompt_centric_layout should have stack_mode='stack-all' if n_quantiles > 0, so that it fits in 1 col"
 
         # Get the maximum color over both the prompt and the sequences
@@ -962,13 +963,13 @@ class _SaeVisData:
 
     @classmethod
     def from_dict(
-        cls, data: dict[str, Any]
+            cls, data: dict[str, Any]
     ) -> (
-        "_SaeVisData"
+            "_SaeVisData"
     ): ...  # just for type hinting; the method comes from 'dataclass_json'
 
     def to_dict(
-        self,
+            self,
     ) -> dict[
         str, Any
     ]: ...  # just for type hinting; the method comes from 'dataclass_json'
@@ -1013,12 +1014,12 @@ class SaeVisData:
 
     @classmethod
     def create(
-        cls,
-        encoder: nn.Module,
-        model: HookedTransformer,
-        tokens: Int[Tensor, "batch seq"],
-        cfg: SaeVisConfig,
-        encoder_B: AutoEncoder | None = None,
+            cls,
+            encoder: nn.Module,
+            model: HookedTransformer,
+            tokens: Int[Tensor, "batch seq"],
+            cfg: SaeVisConfig,
+            encoder_B: AutoEncoder | None = None,
     ) -> "SaeVisData":
         from sae_vis.data_fetching_fns import get_feature_data
 
@@ -1052,7 +1053,7 @@ class SaeVisData:
         return sae_vis_data
 
     # 一个特征一个html
-    def save_feature_centric_vis(
+    def _save_feature_centric_vis(
             self,
             filename: str | Path,
             feature_idx: Optional[int] = None,
@@ -1092,70 +1093,73 @@ class SaeVisData:
                 first_key=str(feature),
             )
 
-    # def save_feature_centric_vis(
-    #     self,
-    #     filename: str | Path,
-    #     feature_idx: int | None = None,
-    # ) -> None:
-    #     """
-    #     Returns the HTML string for the view which lets you navigate between different features.
-    #
-    #     Args:
-    #         model:          Used to get the tokenizer (for converting token IDs to string tokens).
-    #         filename:       The HTML filepath we'll save the visualization to.
-    #         feature_idx:    This is the default feature index we'll start on. If None, we use the first feature.
-    #     """
-    #     # Initialize the object we'll eventually get_html from
-    #     HTML_OBJ = HTML()
-    #
-    #     # Set the default argument for the dropdown (i.e. when the page first loads)
-    #     assert (
-    #         feature_idx is None or feature_idx in self.feature_data_dict
-    #     ), "Specified feature_idx not in specified features"
-    #     first_feature = (
-    #         next(iter(self.feature_data_dict)) if (feature_idx is None) else feature_idx
-    #     )
-    #
-    #     # Get tokenize function (we only need to define it once)
-    #     assert self.model is not None
-    #     assert self.model.tokenizer is not None
-    #     decode_fn = get_decode_html_safe_fn(self.model.tokenizer)
-    #
-    #     # Create iterator
-    #     iterator = list(self.feature_data_dict.items())
-    #     if self.cfg.verbose:
-    #         iterator = tqdm(iterator, desc="Saving feature-centric vis")
-    #
-    #     # For each FeatureData object, we get the html_obj for its feature-centric vis, and merge it with HTML_OBJ
-    #     # (we arbitarily set the HTML string to be the HTML string for the first feature's view; they're all the same)
-    #     for feature, feature_data in iterator:
-    #         html_obj = feature_data._get_html_data_feature_centric(
-    #             self.cfg.feature_centric_layout, decode_fn
-    #         )
-    #         HTML_OBJ.js_data[str(feature)] = deepcopy(html_obj.js_data)
-    #         if feature == first_feature:
-    #             HTML_OBJ.html_data = deepcopy(html_obj.html_data)
-    #
-    #     # Add the aggdata
-    #     HTML_OBJ.js_data = {
-    #         "AGGDATA": self.feature_stats.aggdata,
-    #         "DASHBOARD_DATA": HTML_OBJ.js_data,
-    #     }
-    #
-    #     # Save our full HTML
-    #     HTML_OBJ.get_html(
-    #         layout=self.cfg.feature_centric_layout,
-    #         filename=filename,
-    #         first_key=str(first_feature),
-    #     )
+    def save_feature_centric_vis(
+            self,
+            filename: str | Path,
+            feature_idx: int | None = None,
+            is_single: bool =False
+    ) -> None:
+        if is_single==False:
+            return self._save_feature_centric_vis(filename,feature_idx)
+        """
+        Returns the HTML string for the view which lets you navigate between different features.
+
+        Args:
+            model:          Used to get the tokenizer (for converting token IDs to string tokens).
+            filename:       The HTML filepath we'll save the visualization to.
+            feature_idx:    This is the default feature index we'll start on. If None, we use the first feature.
+        """
+        # Initialize the object we'll eventually get_html from
+        HTML_OBJ = HTML()
+
+        # Set the default argument for the dropdown (i.e. when the page first loads)
+        assert (
+                feature_idx is None or feature_idx in self.feature_data_dict
+        ), "Specified feature_idx not in specified features"
+        first_feature = (
+            next(iter(self.feature_data_dict)) if (feature_idx is None) else feature_idx
+        )
+
+        # Get tokenize function (we only need to define it once)
+        assert self.model is not None
+        assert self.model.tokenizer is not None
+        decode_fn = get_decode_html_safe_fn(self.model.tokenizer)
+
+        # Create iterator
+        iterator = list(self.feature_data_dict.items())
+        if self.cfg.verbose:
+            iterator = tqdm(iterator, desc="Saving feature-centric vis")
+
+        # For each FeatureData object, we get the html_obj for its feature-centric vis, and merge it with HTML_OBJ
+        # (we arbitarily set the HTML string to be the HTML string for the first feature's view; they're all the same)
+        for feature, feature_data in iterator:
+            html_obj = feature_data._get_html_data_feature_centric(
+                self.cfg.feature_centric_layout, decode_fn
+            )
+            HTML_OBJ.js_data[str(feature)] = deepcopy(html_obj.js_data)
+            if feature == first_feature:
+                HTML_OBJ.html_data = deepcopy(html_obj.html_data)
+
+        # Add the aggdata
+        HTML_OBJ.js_data = {
+            "AGGDATA": self.feature_stats.aggdata,
+            "DASHBOARD_DATA": HTML_OBJ.js_data,
+        }
+
+        # Save our full HTML
+        HTML_OBJ.get_html(
+            layout=self.cfg.feature_centric_layout,
+            filename=filename,
+            first_key=str(first_feature),
+        )
 
     def save_prompt_centric_vis(
-        self,
-        prompt: str,
-        filename: str | Path,
-        metric: str | None = None,
-        seq_pos: int | None = None,
-        num_top_features: int = 10,
+            self,
+            prompt: str,
+            filename: str | Path,
+            metric: str | None = None,
+            seq_pos: int | None = None,
+            num_top_features: int = 10,
     ):
         """
         Returns the HTML string for the view which lets you navigate between different features.
@@ -1180,7 +1184,7 @@ class SaeVisData:
             num_top_features=num_top_features,
         )
         assert (
-            len(scores_dict) > 0
+                len(scores_dict) > 0
         ), "No active features found for any tokens in this prompt."
 
         # Get all possible values for dropdowns
@@ -1227,7 +1231,7 @@ class SaeVisData:
             html_obj = HTML()
 
             for i, (feature_idx, score_formatted) in enumerate(
-                zip(feature_idx_list, scores_formatted)
+                    zip(feature_idx_list, scores_formatted)
             ):
                 # Get HTML object at this column (which includes JavaScript to dynamically set the title)
                 html_obj += self.feature_data_dict[
@@ -1278,12 +1282,12 @@ class SaeVisData:
 
     @classmethod
     def load_json(
-        cls,
-        filename: str | Path,
-        cfg: SaeVisConfig,
-        model: HookedTransformer,
-        encoder: AutoEncoder,
-        encoder_B: AutoEncoder,
+            cls,
+            filename: str | Path,
+            cfg: SaeVisConfig,
+            model: HookedTransformer,
+            encoder: AutoEncoder,
+            encoder_B: AutoEncoder,
     ) -> "SaeVisData":
         """
         Loads an SaeVisData instance from JSON file. The config, model & encoder arguments must be user-supplied.
