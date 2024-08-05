@@ -943,6 +943,8 @@ def parse_prompt_data(
     orig_logits = (
         resid_post / resid_post.std(dim=-1, keepdim=True)
     ) @ W_U  # [seq d_vocab]
+    feature_resid_dir = feature_resid_dir.to("cuda:0")
+    W_U = W_U.to("cuda:0")
     raw_logits = feature_resid_dir @ W_U  # [feats d_vocab]
 
     for i, feat in enumerate(feature_idx):
@@ -954,9 +956,12 @@ def parse_prompt_data(
         )
 
         # Ablate the output vector from the residual stream, and get logits post-ablation
+        resid_post=resid_post.to("cuda:0")
+        resid_post_feature_effect=resid_post_feature_effect.to("cuda:0")
         new_resid_post = resid_post - resid_post_feature_effect
         new_logits = (new_resid_post / new_resid_post.std(dim=-1, keepdim=True)) @ W_U
-
+        orig_logits = orig_logits.to("cuda:0")
+        new_logits = new_logits.to("cuda:0")
         # Get the top5 & bottom5 changes in logits (don't bother with `efficient_topk` cause it's small)
         contribution_to_logprobs = orig_logits.log_softmax(
             dim=-1
