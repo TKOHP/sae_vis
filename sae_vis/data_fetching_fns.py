@@ -304,6 +304,8 @@ def parse_feature_data(
     logits = einops.einsum(
         feature_resid_dir, W_U, "feats d_model, d_model d_vocab -> feats d_vocab"
     )
+    print("parse_feature_data()-logits:", end="")
+    print(logits)
     if any(
         x is not None
         for x in [layout.act_hist_cfg, layout.logits_hist_cfg, layout.logits_table_cfg]
