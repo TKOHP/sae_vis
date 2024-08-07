@@ -256,8 +256,8 @@ function defineData() {{
         # Create the full HTML string: wrap everything in `grid-container`, and also create object for holding dropdowns
         full_html_str = f"""
 <div id='dropdown-container'></div>
-<!--<div class='grid-container'>-->
-<body class='grid-container' >
+<div class='grid-container'>
+<!--<body class='grid-container' >-->
 
     {apply_indent(html_str, " " * 4)}
 </div>
@@ -272,7 +272,7 @@ function defineData() {{
 <script>
 {js_str}
 </script>
-</body>
+
 """
 
         # Polish the HTML string in some ways (e.g. there's lots of line breaks below 'grid-container' which we don't want)
